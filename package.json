@@ -1,0 +1,44 @@
+{
+  "name": "pandora-api",
+  "version": "1.0.0",
+  "description": "A Node.js Port of the Unofficial Pandora Radio API",
+  "main": "./src/index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "test"
+  },
+  "dependencies": {
+    "blowfish": "^1.0.1",
+    "snekfetch": "^3.6.4"
+  },
+  "devDependencies": {
+    "cookie": "^0.3.1",
+    "ffmetadata": "^1.5.0",
+    "fluent-ffmpeg": "^2.1.2",
+    "jsdoc": "^3.5.5",
+    "minami": "^1.2.3"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "jsdoc:gen": "jsdoc ./src/ -r -t ./node_modules/minami",
+    "jsdoc:raw": "jsdoc ./src/ -r"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FireController1847/node-pandora-api.git"
+  },
+  "keywords": [
+    "pandora",
+    "pandora radio",
+    "pandora api",
+    "pandora music",
+    "music",
+    "radio"
+  ],
+  "author": "FireController1847",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/FireController1847/node-pandora-api/issues"
+  },
+  "homepage": "https://github.com/FireController1847/node-pandora-api#readme"
+}
