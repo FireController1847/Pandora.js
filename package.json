@@ -9,19 +9,18 @@
   },
   "dependencies": {
     "blowfish": "^1.0.1",
+    "cookie": "^0.3.1",
     "snekfetch": "^3.6.4"
   },
   "devDependencies": {
-    "cookie": "^0.3.1",
-    "ffmetadata": "^1.5.0",
-    "fluent-ffmpeg": "^2.1.2",
     "jsdoc": "^3.5.5",
     "minami": "^1.2.3"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "jsdoc:gen": "jsdoc ./src/ -r -t ./node_modules/minami",
-    "jsdoc:raw": "jsdoc ./src/ -r"
+    "jsdoc:raw": "jsdoc ./src/ -r",
+    "jsdoc:prod": "jsdoc ./src/ -r -t ./node_modules/minami -d ../Pandora.js-Docs/docs"
   },
   "repository": {
     "type": "git",
