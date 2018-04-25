@@ -1,7 +1,7 @@
 # PandoraAPI
 This is a node.js version of the unofficial Pandora API. Due to the fact that it is unofficial, I will __not__ be publishing it as a node module. On the other hand, I will build it like a node module and encourage that if you want to use it you can clone it into a folder and require it from there.
 
-__What about docs?__ Currently, there is no documentation. Although, if you clone it and follow the steps below, you can generate your own html files for documentation.
+__What about docs?__ Here's a GitHub IO url for the autogen documentation. https://firecontroller1847.github.io/Pandora.js-Docs/
 
 - Using Yarn
   - `yarn install`
