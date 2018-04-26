@@ -3,6 +3,8 @@ This is a node.js version of the unofficial Pandora API. Due to the fact that it
 
 __What about docs?__ Here's a GitHub IO url for the autogen documentation. https://firecontroller1847.github.io/Pandora.js-Docs/
 
+__I don't like the look of your docs!__ Okay, that's fine. Checkout the instructions below to generate docs. Feel free to modify the package.json :)
+
 - Using Yarn
   - `yarn install`
   - `yarn run jsdoc:gen`
@@ -13,7 +15,7 @@ __What about docs?__ Here's a GitHub IO url for the autogen documentation. https
 Then, just open up index.html in the new folder called `out`.
 
 ## Example Usage
-Since there is no documentation, here are some examples on how to use the module.
+Here are some examples on how to use the module.
 
 #### Logging In
 Method #1 (Preferred)
@@ -78,7 +80,7 @@ Congradulations, you've successfully gotten some songs! Now, just make a `get` r
 ## ⚠ This Module Is Not Complete
 All Pandora methods may not be completed. I've taken the time and effort to reverse engineer the Pandora API (with some help of [this doc sheet](https://6xq.net/pandora-apidoc/rest/), although not much), but since Pandora doesn't ensorse the usage of this API, they may change things at will without notice. Versions of this module will break randomly, and patches may or may not be fixed. **All pull requests to help add more methods or items to the API are appreciated.**
 
-## ⚠ There are 'with good intent` conditions you should follow!
+## ⚠ There are 'with good intent' conditions you should follow!
 Pandora does not endorse the usage of this API, and it may even get your account banned. If you use this API to pirate songs or play songs without playing the additional ads for them, **you are doing so at your own risk**. This API is merely to provide a way to use Pandora in Node.js. What you do with it is on you. If Pandora Media comes after you, sues you, or anything similar because your app is breaking the terms of service (or anything similar), you CANNOT blame this API.
 
 **You must ALWAYS play ads on a non-premium user account!**
