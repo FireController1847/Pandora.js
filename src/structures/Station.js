@@ -17,6 +17,12 @@ class Station {
      * @type {string}
      */
     this.id = raw.stationId;
+    
+    /**
+     * This station's name.
+     * @type {string}
+     */
+    this.name = raw.name;
 
     /**
      * The internal Factory Pandora ID.
