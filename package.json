@@ -1,6 +1,6 @@
 {
   "name": "pandora-api",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A Node.js Port of the Unofficial Pandora Radio API",
   "main": "./src/index.js",
   "directories": {
