@@ -2,6 +2,10 @@ const cookie = require('cookie');
 const query = require('querystring');
 const snekfetch = require('snekfetch');
 
+/**
+ * @typedef {import('./Client.js')} Client
+ */
+
 class RESTManager {
   /**
    * @param {Client} client The client that runs the REST manager.
