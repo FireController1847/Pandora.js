@@ -7,10 +7,10 @@ __I don't like the look of your docs!__ Okay, that's fine. Checkout the instruct
 
 - Using Yarn
   - `yarn install`
-  - `yarn run jsdoc:gen`
+  - `yarn run docs`
 - Using NPM
   - `npm install`
-  - `npm run jsdoc:gen`
+  - `npm run docs`
 
 Then, just open up index.html in the new folder called `out`.
 
