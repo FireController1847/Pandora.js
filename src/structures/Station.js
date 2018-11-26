@@ -1,10 +1,12 @@
 const Song = require('./Song.js');
 
 /**
+ * Represents a Pandora Station.
+ * 
  * @typedef {import('../client/Client.js')} Client
+ * @typedef {import('../client/Client.js').Art} Art
  * @typedef {import('./Song.js')} Song
  */
-
 class Station {
   /**
    * @param {Client} client The client that initiated this station.
@@ -42,13 +44,8 @@ class Station {
     this.pandoraId = raw.pandoraId;
 
     /**
-     * @typedef StationArt
-     * @property {String} url The URL for this art.
-     * @property {number} size The size in pixels of this art.
-     */
-    /**
      * The station art.
-     * @type {Array<StationArt>}
+     * @type {Array<Art>}
      */
     this.art = raw.art;
 
@@ -170,19 +167,19 @@ class Station {
     /**
      * The genre(s) that this station is classified
      * under.
-     * @type {Array<String>}
+     * @type {Array<string>}
      */
     this.genres = raw.genre;
 
     /**
      * The sponsorship for this genre. (?)
-     * @type {String}
+     * @type {string}
      */
     this.genreSponsorship = raw.genreSponsorship;
 
     /**
      * The genre for the advertisements. (?)
-     * @type {String}
+     * @type {string}
      */
     this.adGenre = raw.adGenre;
 
@@ -194,51 +191,27 @@ class Station {
 
     /**
      * The initial seed for this station.
-     * @type {Object}
+     * @typedef InitialSeed
+     * @property {string} musicId The music id for this seed. (?)
+     * @property {string} pandoraId The pandora id for this seed.
      */
     this.initialSeed = {
-
-      /**
-       * The music id for this seed. (?)
-       * @type {String}
-       */
       musicId: raw.initialSeed ? raw.initialSeed.musicId : "",
-
-      /**
-       * The pandora id for this seed.
-       * @type {String}
-       */
       pandoraId: raw.initialSeed ? raw.initialSeed.pandoraId : ""
     };
 
     /**
      * Look, adkv is back. For all your adkv needs.
-     * @type {Object}
+     * @typedef Adkv
+     * @property {string} artist The artist for this adkv.
+     * @property {string} genre The genre for this adkv.
+     * @property {string} clean Whether or not this adkv is clean. (?)
+     * @property {string} gcat Green Cats. Maybe? No? (?)
      */
     this.adkv = {
-
-      /**
-       * The artist for this adkv.
-       * @type {String}
-       */
       artist: raw.adkv ? raw.adkv.artist : "",
-
-      /**
-       * The genre for this adkv.
-       * @type {String}
-       */
       genre: raw.adkv ? raw.adkv.genre : "",
-
-      /**
-       * Whether or not this adkv is clean. (?)
-       * @type {string}
-       */
       clean: raw.adkv ? raw.adkv.clean : "",
-
-      /**
-       * Green Cats. Maybe? (?)
-       * @type {String}
-       */
       gcat: raw.adkv ? raw.adkv.gcat : ""
     };
 
@@ -261,7 +234,7 @@ class Station {
    * Returns a list of songs to play.
    * @param {boolean} isStationStart Whether or not this is the first time requested for songs from this station.
    * @param {Object} options
-   * @param {String} options.audioFormat The audioURL return format.
+   * @param {string} options.audioFormat The audioURL return format.
    * @returns {Promise<Array<Song>>}
    */
   async getSongList(isStationStart, options = {}) {

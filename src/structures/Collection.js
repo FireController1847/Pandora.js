@@ -1,44 +1,11 @@
-// A modified version of Discord.js's Collection.js. Thanks guys!
-// https://github.com/discordjs/discord.js/blob/master/src/util/Collection.js
-
 /**
-  * Flatten an object. Any properties that are collections will get converted to an array of keys.
-  * @param {Object} obj The object to flatten.
-  * @param {...Object<string, boolean|string>} [props] Specific properties to include/exclude.
-  * @returns {Object}
-*/
-function flatten(obj, ...props) {
-  if (!isObject(obj)) return obj;
-
-  props = Object.assign(...Object.keys(obj).filter(k => !k.startsWith('_')).map(k => ({ [k]: true })), ...props);
-
-  const out = {};
-
-  for (let [prop, newProp] of Object.entries(props)) {
-    if (!newProp) continue;
-    newProp = newProp === true ? prop : newProp;
-
-    const element = obj[prop];
-    const elemIsObj = isObject(element);
-    const valueOf = elemIsObj && typeof element.valueOf === 'function' ? element.valueOf() : null;
-
-    // If it's a collection, make the array of keys
-    if (element instanceof require('./Collection')) out[newProp] = Array.from(element.keys());
-    // If it's an array, flatten each element
-    else if (Array.isArray(element)) out[newProp] = element.map(e => flatten(e));
-    // If it's an object with a primitive `valueOf`, use that value
-    else if (typeof valueOf !== 'object') out[newProp] = valueOf;
-    // If it's a primitive
-    else if (!elemIsObj) out[newProp] = element;
-  }
-
- return out;
-}
-
-/**
+ * A modified version of Discord.js's Collection.js. Thanks guys!
+ * https://github.com/discordjs/discord.js/blob/master/src/util/Collection.js
+ * 
  * A Map with additional utility methods. This is used throughout discord.js rather than Arrays for anything that has
  * an ID, for significantly improved performance and ease-of-use.
  * @extends {Map}
+ * @private
  */
 class Collection extends Map {
   constructor(iterable) {
@@ -60,6 +27,40 @@ class Collection extends Map {
      */
     Object.defineProperty(this, '_keyArray', { value: null, writable: true, configurable: true });
   }
+
+  /**
+   * Flatten an object. Any properties that are collections will get converted to an array of keys.
+   * @param {Object} obj The object to flatten.
+   * @param {...Object<string, boolean|string>} [props] Specific properties to include/exclude.
+   * @returns {Object}
+  */
+  static flatten(obj, ...props) {
+  if (!isObject(obj)) return obj;
+
+  props = Object.assign(...Object.keys(obj).filter(k => !k.startsWith('_')).map(k => ({ [k]: true })), ...props);
+
+  const out = {};
+
+  for (let [prop, newProp] of Object.entries(props)) {
+    if (!newProp) continue;
+    newProp = newProp === true ? prop : newProp;
+
+    const element = obj[prop];
+    const elemIsObj = isObject(element);
+    const valueOf = elemIsObj && typeof element.valueOf === 'function' ? element.valueOf() : null;
+
+    // If it's a collection, make the array of keys
+    if (element instanceof require('./Collection')) out[newProp] = Array.from(element.keys());
+    // If it's an array, flatten each element
+    else if (Array.isArray(element)) out[newProp] = element.map(e => Collection.flatten(e));
+    // If it's an object with a primitive `valueOf`, use that value
+    else if (typeof valueOf !== 'object') out[newProp] = valueOf;
+    // If it's a primitive
+    else if (!elemIsObj) out[newProp] = element;
+  }
+
+ return out;
+}
 
   set(key, val) {
     this._array = null;
@@ -449,7 +450,7 @@ class Collection extends Map {
   }
 
   toJSON() {
-    return this.map(e => typeof e.toJSON === 'function' ? e.toJSON() : Util.flatten(e));
+    return this.map(e => typeof e.toJSON === 'function' ? e.toJSON() : Collection.flatten(e));
   }
 }
 

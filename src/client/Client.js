@@ -5,6 +5,7 @@ const User = require('../structures/User.js');
 /**
  * @typedef {import('./RESTManager.js')} RESTManager
  * @typedef {import('../structures/User.js')} User
+ * @ignore
  */
 
 /**
@@ -13,8 +14,14 @@ const User = require('../structures/User.js');
  *  that when the user is logging in there's a little link that says "Don't trust it? Click here."
  *  Then, when the user clicks, it will link them to a page that shows them the source code that
  *  directly calls the API, and does not store their username and password.
+ * @ignore
  */
 
+/**
+ * Represents the Pandora "client" and gives a reference
+ * to the user for all classes.
+ * @extends EventEmitter
+ */
 class Client extends EventEmitter {
   constructor() {
     super();
@@ -25,7 +32,7 @@ class Client extends EventEmitter {
     this.rest = new RESTManager(this);
 
     /**
-     * The user attributed to this client.
+     * Represents the connection to the user's Pandora account.
      * Determined after login.
      * @type {User|null}
      */
@@ -50,7 +57,7 @@ class Client extends EventEmitter {
     this.emit('ready');
   }
 
-  /** Util */
+  /** @ignore Utility Methods */
 
   /**
    * Emitted for debug information, especially on
@@ -62,5 +69,11 @@ class Client extends EventEmitter {
     console.log(...arguments);
   }
 }
+
+/**
+ * @typedef {Object} Art
+ * @property {String} url The URL for this art.
+ * @property {number} size The size in pixels of this art.
+ */
 
 module.exports = Client;

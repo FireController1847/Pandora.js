@@ -2,10 +2,11 @@ const Collection = require('./Collection.js');
 const Station = require('./Station.js');
 
 /**
+ * Represents the user that is logged in.
+ * 
  * @typedef {import('../client/Client.js')} Client
  * @typedef {import('./Station.js')} Station
  */
-
 class User {
   /**
    * @param {Client} client The client that initiated this user.
@@ -122,54 +123,22 @@ class User {
 
     /**
      * This user's custom configuration.
-     * @type {Object}
+     * @typedef UserConfig
+     * @property {string} branding What type of branding to use for Pandora.
+     * @property {number} dailySkipLimit How many skips the user gets per day.
+     * @property {number} stationSkipLimit How many skips the user gets per station.
+     * @property {number} inactivityTimeout How long it takes for the user to timeout when no activity is detected.
+     * @property {Array<number>} experiments I'm not exactly sure what this is for.
+     * @property {Array<string>} flags Other options that may or may not be attributed to if the user is a Pandora Premium subscriber.
+     * @property {number} monthlyListeningCapHours Not exactly sure. I guess the amount of hours until you can't listen anymore per month?
      */
     this.config = {
-
-      /**
-       * What type of branding to use for Pandora.
-       * @type {string}
-       */
       branding: raw.config.branding,
-
-      /**
-       * How many skips the user gets per day.
-       * @type {number}
-       */
       dailySkipLimit: raw.config.dailySkipLimit,
-
-      /**
-       * How many skips the user gets per station.
-       * @type {number}
-       */
       stationSkipLimit: raw.config.stationSkipLimit,
-
-      /**
-       * How long it takes for the user to timeout when
-       * no activity is detected.
-       * @type {number}
-       */
       inactivityTimeout: raw.config.inactivityTimeout,
-
-      /**
-       * I'm not exactly sure what this is for.
-       * @type {Array<number>}
-       */
       experiments: raw.config.experiments,
-
-      /**
-       * Other options that may or may not be attributed
-       * to if the user is a Pandora Premium or Pandora Plus
-       * subscriber.
-       * @type {Array<String>}
-       */
       flags: raw.config.flags,
-
-      /**
-       * Not exactly sure. I guess the amount of hours
-       * until you can't listen anymore per month?
-       * @type {number}
-       */
       monthlyListeningCapHours: raw.config.monthlyListeningCapHours
     };
 
@@ -209,7 +178,7 @@ class User {
 
     /**
      * Smart conversion ad URL.
-     * @type {String}
+     * @type {string}
      */
     this.smartConversionAdUrl = raw.smartConversionAdUrl;
 
@@ -258,7 +227,7 @@ class User {
 
     /**
      * A list of this user's stations.
-     * @type {Map<String, Station>}
+     * @type {Map<string, Station>}
      */
     this.stations = new Collection();
   }
@@ -266,7 +235,7 @@ class User {
   /**
    * Reset and get the list of stations
    * from the user.
-   * @returns {Promise<Map<String, Station>>}
+   * @returns {Promise<Map<string, Station>>}
    */
   async getStations() {
     this.stations.clear();

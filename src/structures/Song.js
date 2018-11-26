@@ -1,8 +1,10 @@
 /**
+ * Represents a Pandora Song.
+ * 
  * @typedef {import('../client/Client.js')} Client
+ * @typedef {import('../client/Client.js').Art} Art
  * @typedef {import('./Station.js')} Station
  */
-
 class Song {
   /**
    * @param {Client} client The client that initiated this song.
@@ -24,13 +26,13 @@ class Song {
 
     /**
      * The user seed for this song.
-     * @type {String}
+     * @type {string}
      */
     this.userSeed = raw.userSeed;
 
     /**
      * The genre(s) for this song.
-     * @type {Array<String>}
+     * @type {Array<string>}
      */
     this.genres = raw.genre;
 
@@ -116,14 +118,14 @@ class Song {
     /**
      * The SEO token for the artist of
      * this song.
-     * @type {String}
+     * @type {string}
      */
     this.artistSeoToken = raw.artistSeoToken;
 
     /**
      * The SEO token for the album of
      * this song.
-     * @type {String}
+     * @type {string}
      */
     this.albumSeoToken = raw.albumSeoToken;
 
@@ -160,98 +162,62 @@ class Song {
 
     /**
      * The URLs for the ads attributed to this song.
-     * @type {Object}
+     * @typedef AdUrls
+     * @property {string} flexSkip The ad used if the user wants to gain more skips.
+     * @property {string} flexReplay The ad used if the user wants to gain more replays.
+     * @property {string} flexThumbsDown The ad used if the user wants to skip using a thumbs down.
+     * @property {string} nowPlayingStation The ad used for now playing songs.
+     * @property {string} nowPlayingStationAdUnit The nowplaying ad unit. (?)
+     * @property {string} nowPlayingStationAdTargeting The nowplaying ad 'targeting'. (?)
+     * @property {string} backstage The "backstage" ad. (?)
+     * @property {string} backstageAdUnit The "backstage" ad unit. (?)
+     * @property {string} backstageAdTargeting The "backstage" ad targeting. (?)
      */
     this.adUrls = {
-
-      /**
-       * The ad used if the user wants to gain more skips.
-       * @type {String}
-       */
       flexSkip: raw.adUrls.flexSkipAdUrl,
-
-      /**
-       * The ad used if the user wants to gain more replays.
-       * @type {String}
-       */
       flexReplay: raw.adUrls.flexSkipAdUrl,
-
-      /**
-       * The ad used if the user wants to skip using a thumbs down.
-       * @type {String}
-       */
       flexThumbsDown: raw.adUrls.flexThumbsDownAdUrl,
-
-      /**
-       * The ad used for now playing songs.
-       * @type {String}
-       */
       nowPlayingStation: raw.adUrls.nowPlayingStationAdUrl,
-
-      /**
-       * The nowplaying ad unit. (?)
-       * @type {String}
-       */
       nowPlayingStationAdUnit: raw.adUrls.nowPlayingStationAdUnit,
-
-      /**
-       * The nowplaying ad 'targeting'. (?)
-       * @type {String}
-       */
       nowPlayingStationAdTargeting: raw.adUrls.nowPlayingStationAdTargeting,
-
-      /**
-       * The "backstage" ad. (?)
-       * @type {String}
-       */
       backstage: raw.adUrls.backstageAdUrl,
-
-      /**
-       * The "backstage" ad unit. (?)
-       * @type {String}
-       */
       backstageAdUnit: raw.adUrls.backstageAdUnit,
-
-      /**
-       * The "backstage" ad targeting. (?)
-       * @type {String}
-       */
       backstageAdTargeting: raw.adUrls.backstageAdTargeting
     };
 
     /**
      * The title for this song.
-     * @type {String}
+     * @type {string}
      */
     this.title = raw.songTitle;
 
     /**
      * The music ID for this song.
-     * @type {String}
+     * @type {string}
      */
     this.id = raw.musicId;
 
     /**
      * The track type for this song. (?)
-     * @type {String}
+     * @type {string}
      */
     this.trackType = raw.trackType;
 
     /**
      * The internal pandora ID for this song.
-     * @type {String}
+     * @type {string}
      */
     this.pandoraId = raw.pandoraId;
 
     /**
      * This song's token.
-     * @type {String}
+     * @type {string}
      */
     this.token = raw.trackToken;
 
     /**
      * This song's identity.
-     * @type {String}
+     * @type {string}
      */
     this.identity = raw.identity;
 
@@ -269,145 +235,96 @@ class Song {
 
     /**
      * How much gain is modified in the provided audio URL.
-     * @type {String}
+     * @type {string}
      */
     this.gain = raw.fileGain;
 
     /**
      * The URL for getting details about the song.
-     * @type {String}
+     * @type {string}
      */
     this.detailURL = raw.songDetailURL;
 
     /**
      * The track's SEO token.
-     * @type {String}
+     * @type {string}
      */
     this.trackSeoToken = raw.trackSeoToken;
 
     /**
      * The audio URL for this song.
-     * @type {String}
+     * @type {string}
      */
     this.audioURL = raw.audioURL;
 
     /**
      * The rights that this song. These should NEVER BE IGNORED.
-     * @type {Array<String>}
+     * @type {Array<string>}
      */
     this.rights = raw.rights;
 
     /**
      * The audio encoding for the provided audio URL.
-     * @type {String}
+     * @type {string}
      */
     this.audioEncoding = raw.audioEncoding;
 
     /**
      * The token id for the provided audio URL.
-     * @type {String}
+     * @type {string}
      */
     this.audioToken = raw.audioTokenId;
 
     /**
      * The recipt URL for the provided audio URL. (?)
-     * @type {String}
+     * @type {string}
      */
     this.audioReciptURL = raw.audioReciptURL;
 
     /**
      * The skip URL for the provided audio URL. (?)
-     * @type {String}
+     * @type {string}
      */
     this.audioSkipURL = raw.audioSkipURL;
 
     /**
      * The artist of this song.
-     * @type {Object}
+     * @typedef Artist
+     * @property {string} name The name of the artist of this song.
+     * @property {string} musicId The ID of the artist's music. (?)
+     * @property {Array<Art>} art The art for the artist.
+     * @property {string} detailURL The URL used for getting details about the artist.
      */
     this.artist = {
-
-      /**
-       * The name of the artist of this song.
-       * @type {String}
-       */
       name: raw.artistName,
-
-      /**
-       * The ID of the artist's music. (?)
-       * @type {String}
-       */
       musicId: raw.artistMusicId,
-
-      /**
-       * @typedef ArtistArt
-       * @property {String} url The URL for this art.
-       * @property {number} size The size in pixels of this art.
-       */
-      /**
-       * The art for the artist.
-       * @type {Array<ArtistArt>}
-       */
       art: raw.artistArt,
-
-      /**
-       * The URL used for getting details about the artist.
-       * @type {String}
-       */
       detailURL: raw.artistDetailURL
     };
 
     /**
      * The album for this song.
-     * @type {Object}
+     * @typedef SongAlbum
+     * @property {string} title The title of this song's album.
+     * @property {Array<Art>} art The art for this album.
+     * @property {string} detailURL The detail URL for getting information about this song's album.
      */
     this.album = {
-
-      /**
-       * The title of this song's album.
-       * @type {String}
-       */
       title: raw.albumTitle,
-
-      /**
-       * @typedef AlbumArt
-       * @property {String} url The URL for this art.
-       * @property {number} size The size in pixels of this art.
-       */
-      /**
-       * The art for this song's album.
-       */
       art: raw.albumArt,
-
-      /**
-       * The detail URL for getting information about this song's album.
-       * @type {String}
-       */
       detailURL: raw.albumDetailURL
     };
 
     /**
      * The song's track key.
-     * @type {Object}
+     * @typedef SongTrackKey
+     * @property {string} trackId The track ID. (?)
+     * @property {string} trackType The track type. (?)
+     * @property {string} spinId The spin id. (?)
      */
     this.trackKey = {
-
-      /**
-       * The track ID. (?)
-       * @type {String}
-       */
       trackId: raw.trackId,
-
-      /**
-       * The track type. (?)
-       * @type {String}
-       */
       trackType: raw.trackType,
-
-      /**
-       * The spin id. (?)
-       * @type {String}
-       */
       spinId: raw.spinId
     };
   }

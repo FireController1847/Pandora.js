@@ -13,15 +13,13 @@
     "snekfetch": "^3.6.4"
   },
   "devDependencies": {
-    "jsdoc": "^3.5.5",
-    "minami": "^1.2.3",
+    "documentation": "^8.1.2",
     "mocha": "^5.2.0"
   },
   "scripts": {
     "test": "mocha test/test.js",
-    "jsdoc:gen": "jsdoc ./src/ -r -t ./node_modules/minami",
-    "jsdoc:raw": "jsdoc ./src/ -r",
-    "jsdoc:prod": "jsdoc ./src/ -r -t ./node_modules/minami -d ../Pandora.js-Docs/docs"
+    "docs": "documentation build src/** -f html -o out",
+    "docs:json": "documentation build src/** -f json -o out/docs.json"
   },
   "repository": {
     "type": "git",

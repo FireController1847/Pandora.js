@@ -3,9 +3,10 @@ const query = require('querystring');
 const snekfetch = require('snekfetch');
 
 /**
+ * Handles all REST requests related to the API.
+ * 
  * @typedef {import('./Client.js')} Client
  */
-
 class RESTManager {
   /**
    * @param {Client} client The client that runs the REST manager.
