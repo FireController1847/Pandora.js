@@ -3,6 +3,11 @@ const RESTManager = require('./RESTManager.js');
 const User = require('../structures/User.js');
 
 /**
+ * @typedef {import('./RESTManager.js')} RESTManager
+ * @typedef {import('../structures/User.js')} User
+ */
+
+/**
  * TODO: ADD ERRORS ON INVALID PARAMETERS
  * SUGGESTION: When we finally release it as a module (if I even do that), maybe make it so
  *  that when the user is logging in there's a little link that says "Don't trust it? Click here."

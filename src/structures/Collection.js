@@ -2,6 +2,40 @@
 // https://github.com/discordjs/discord.js/blob/master/src/util/Collection.js
 
 /**
+  * Flatten an object. Any properties that are collections will get converted to an array of keys.
+  * @param {Object} obj The object to flatten.
+  * @param {...Object<string, boolean|string>} [props] Specific properties to include/exclude.
+  * @returns {Object}
+*/
+function flatten(obj, ...props) {
+  if (!isObject(obj)) return obj;
+
+  props = Object.assign(...Object.keys(obj).filter(k => !k.startsWith('_')).map(k => ({ [k]: true })), ...props);
+
+  const out = {};
+
+  for (let [prop, newProp] of Object.entries(props)) {
+    if (!newProp) continue;
+    newProp = newProp === true ? prop : newProp;
+
+    const element = obj[prop];
+    const elemIsObj = isObject(element);
+    const valueOf = elemIsObj && typeof element.valueOf === 'function' ? element.valueOf() : null;
+
+    // If it's a collection, make the array of keys
+    if (element instanceof require('./Collection')) out[newProp] = Array.from(element.keys());
+    // If it's an array, flatten each element
+    else if (Array.isArray(element)) out[newProp] = element.map(e => flatten(e));
+    // If it's an object with a primitive `valueOf`, use that value
+    else if (typeof valueOf !== 'object') out[newProp] = valueOf;
+    // If it's a primitive
+    else if (!elemIsObj) out[newProp] = element;
+  }
+
+ return out;
+}
+
+/**
  * A Map with additional utility methods. This is used throughout discord.js rather than Arrays for anything that has
  * an ID, for significantly improved performance and ease-of-use.
  * @extends {Map}
@@ -42,7 +76,7 @@ class Collection extends Map {
   /**
    * Creates an ordered array of the values of this collection, and caches it internally. The array will only be
    * reconstructed if an item is added to or removed from the collection, or if you change the length of the array
-   * itself. If you don't want this caching behaviour, use `[...collection.values()]` or
+   * itself. If you don't want this caching behavior, use `[...collection.values()]` or
    * `Array.from(collection.values())` instead.
    * @returns {Array}
    */
@@ -54,7 +88,7 @@ class Collection extends Map {
   /**
    * Creates an ordered array of the keys of this collection, and caches it internally. The array will only be
    * reconstructed if an item is added to or removed from the collection, or if you change the length of the array
-   * itself. If you don't want this caching behaviour, use `[...collection.keys()]` or
+   * itself. If you don't want this caching behavior, use `[...collection.keys()]` or
    * `Array.from(collection.keys())` instead.
    * @returns {Array}
    */
@@ -99,7 +133,7 @@ class Collection extends Map {
    * Obtains the last value(s) in this collection. This relies on {@link Collection#array}, and thus the caching
    * mechanism applies here as well.
    * @param {number} [amount] Amount of values to obtain from the end
-   * @returns {*|Array<*>} A single value if no amount is provided or an array of values, starting from the end if
+   * @returns {*|Array<*>} A single value if no amount is provided or an array of values, starting from the start if
    * amount is negative
    */
   last(amount) {
@@ -114,7 +148,7 @@ class Collection extends Map {
    * Obtains the last key(s) in this collection. This relies on {@link Collection#keyArray}, and thus the caching
    * mechanism applies here as well.
    * @param {number} [amount] Amount of keys to obtain from the end
-   * @returns {*|Array<*>} A single key if no amount is provided or an array of keys, starting from the end if
+   * @returns {*|Array<*>} A single key if no amount is provided or an array of keys, starting from the start if
    * amount is negative
    */
   lastKey(amount) {
@@ -126,7 +160,7 @@ class Collection extends Map {
   }
 
   /**
-   * Obtains random value(s) from this collection. This relies on {@link Collection#array}, and thus the caching
+   * Obtains unique random value(s) from this collection. This relies on {@link Collection#array}, and thus the caching
    * mechanism applies here as well.
    * @param {number} [amount] Amount of values to obtain randomly
    * @returns {*|Array<*>} A single value if no amount is provided or an array of values
@@ -142,7 +176,7 @@ class Collection extends Map {
   }
 
   /**
-   * Obtains random key(s) from this collection. This relies on {@link Collection#keyArray}, and thus the caching
+   * Obtains unique random key(s) from this collection. This relies on {@link Collection#keyArray}, and thus the caching
    * mechanism applies here as well.
    * @param {number} [amount] Amount of keys to obtain randomly
    * @returns {*|Array<*>} A single key if no amount is provided or an array
@@ -158,119 +192,70 @@ class Collection extends Map {
   }
 
   /**
-   * Searches for all items where their specified property's value is identical to the given value
-   * (`item[prop] === value`).
-   * @param {string} prop The property to test against
-   * @param {*} value The expected value
-   * @returns {Array}
-   * @example
-   * collection.findAll('username', 'Bob');
-   */
-  findAll(prop, value) {
-    if (typeof prop !== 'string') throw new TypeError('Key must be a string.');
-    if (typeof value === 'undefined') throw new Error('Value must be specified.');
-    const results = [];
-    for (const item of this.values()) {
-      if (item[prop] === value) results.push(item);
-    }
-    return results;
-  }
-
-  /**
-   * Searches for a single item where its specified property's value is identical to the given value
-   * (`item[prop] === value`), or the given function returns a truthy value. In the latter case, this is identical to
+   * Searches for a single item where the given function returns a truthy value. This behaves like
    * [Array.find()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/find).
    * <warn>All collections used in Discord.js are mapped using their `id` property, and if you want to find by id you
    * should use the `get` method. See
    * [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/get) for details.</warn>
-   * @param {string|Function} propOrFn The property to test against, or the function to test with
-   * @param {*} [value] The expected value - only applicable and required if using a property for the first argument
+   * @param {Function} fn The function to test with (should return boolean)
+   * @param {*} [thisArg] Value to use as `this` when executing function
    * @returns {*}
-   * @example
-   * collection.find('username', 'Bob');
-   * @example
-   * collection.find(val => val.username === 'Bob');
+   * @example collection.find(user => user.username === 'Bob');
    */
-  find(propOrFn, value) {
-    if (typeof propOrFn === 'string') {
-      if (typeof value === 'undefined') throw new Error('Value must be specified.');
-      for (const item of this.values()) {
-        if (item[propOrFn] === value) return item;
-      }
-      return undefined;
-    } else if (typeof propOrFn === 'function') {
-      for (const [key, val] of this) {
-        if (propOrFn(val, key, this)) return val;
-      }
-      return undefined;
-    } else {
-      throw new Error('First argument must be a property string or a function.');
+  find(fn, thisArg) {
+    if (typeof thisArg !== 'undefined') fn = fn.bind(thisArg);
+    for (const [key, val] of this) {
+      if (fn(val, key, this)) return val;
     }
+    return undefined;
   }
 
   /* eslint-disable max-len */
   /**
-   * Searches for the key of a single item where its specified property's value is identical to the given value
-   * (`item[prop] === value`), or the given function returns a truthy value. In the latter case, this is identical to
-   * [Array.findIndex()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/findIndex).
-   * @param {string|Function} propOrFn The property to test against, or the function to test with
-   * @param {*} [value] The expected value - only applicable and required if using a property for the first argument
+   * Searches for the key of a single item where the given function returns a truthy value. This behaves like
+   * [Array.findIndex()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/findIndex),
+   * but returns the key rather than the positional index.
+   * @param {Function} fn The function to test with (should return boolean)
+   * @param {*} [thisArg] Value to use as `this` when executing function
    * @returns {*}
-   * @example
-   * collection.findKey('username', 'Bob');
-   * @example
-   * collection.findKey(val => val.username === 'Bob');
+   * @example collection.findKey(user => user.username === 'Bob');
    */
-  /* eslint-enable max-len */
-  findKey(propOrFn, value) {
-    if (typeof propOrFn === 'string') {
-      if (typeof value === 'undefined') throw new Error('Value must be specified.');
-      for (const [key, val] of this) {
-        if (val[propOrFn] === value) return key;
-      }
-      return undefined;
-    } else if (typeof propOrFn === 'function') {
-      for (const [key, val] of this) {
-        if (propOrFn(val, key, this)) return key;
-      }
-      return undefined;
-    } else {
-      throw new Error('First argument must be a property string or a function.');
+  findKey(fn, thisArg) {
+    /* eslint-enable max-len */
+    if (typeof thisArg !== 'undefined') fn = fn.bind(thisArg);
+    for (const [key, val] of this) {
+      if (fn(val, key, this)) return key;
     }
+    return undefined;
   }
 
   /**
-   * Searches for the existence of a single item where its specified property's value is identical to the given value
-   * (`item[prop] === value`), or the given function returns a truthy value.
-   * <warn>Do not use this to check for an item by its ID. Instead, use `collection.has(id)`. See
-   * [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/has) for details.</warn>
-   * @param {string|Function} propOrFn The property to test against, or the function to test with
-   * @param {*} [value] The expected value - only applicable and required if using a property for the first argument
-   * @returns {boolean}
-   * @example
-   * if (collection.exists('username', 'Bob')) {
-   *  console.log('user here!');
-   * }
-   * @example
-   * if (collection.exists(user => user.username === 'Bob')) {
-   *  console.log('user here!');
-   * }
+   * Removes entries that satisfy the provided filter function.
+   * @param {Function} fn Function used to test (should return a boolean)
+   * @param {Object} [thisArg] Value to use as `this` when executing function
+   * @returns {number} The number of removed entries
    */
-  exists(propOrFn, value) {
-    return Boolean(this.find(propOrFn, value));
+  sweep(fn, thisArg) {
+    if (typeof thisArg !== 'undefined') fn = fn.bind(thisArg);
+    const previousSize = this.size;
+    for (const [key, val] of this) {
+      if (fn(val, key, this)) this.delete(key);
+    }
+    return previousSize - this.size;
   }
 
   /**
    * Identical to
    * [Array.filter()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter),
    * but returns a Collection instead of an Array.
-   * @param {Function} fn Function used to test (should return a boolean)
-   * @param {Object} [thisArg] Value to use as `this` when executing function
+   * @param {Function} fn The function to test with (should return boolean)
+   * @param {*} [thisArg] Value to use as `this` when executing function
    * @returns {Collection}
+   * @example collection.filter(user => user.username === 'Bob');
    */
   filter(fn, thisArg) {
-    if (thisArg) fn = fn.bind(thisArg);
-    const results = new Collection();
+    if (typeof thisArg !== 'undefined') fn = fn.bind(thisArg);
+    const results = new this.constructor[Symbol.species]();
     for (const [key, val] of this) {
       if (fn(val, key, this)) results.set(key, val);
     }
@@ -278,30 +263,36 @@ class Collection extends Map {
   }
 
   /**
-   * Identical to
-   * [Array.filter()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter).
+   * Partitions the collection into two collections where the first collection
+   * contains the items that passed and the second contains the items that failed.
    * @param {Function} fn Function used to test (should return a boolean)
-   * @param {Object} [thisArg] Value to use as `this` when executing function
-   * @returns {Array}
+   * @param {*} [thisArg] Value to use as `this` when executing function
+   * @returns {Collection[]}
+   * @example const [big, small] = collection.partition(guild => guild.memberCount > 250);
    */
-  filterArray(fn, thisArg) {
-    if (thisArg) fn = fn.bind(thisArg);
-    const results = [];
+  partition(fn, thisArg) {
+    if (typeof thisArg !== 'undefined') fn = fn.bind(thisArg);
+    const results = [new this.constructor[Symbol.species](), new this.constructor[Symbol.species]()];
     for (const [key, val] of this) {
-      if (fn(val, key, this)) results.push(val);
+      if (fn(val, key, this)) {
+        results[0].set(key, val);
+      } else {
+        results[1].set(key, val);
+      }
     }
     return results;
   }
 
   /**
-   * Identical to
+   * Maps each item to another value. Identical in behavior to
    * [Array.map()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map).
    * @param {Function} fn Function that produces an element of the new array, taking three arguments
    * @param {*} [thisArg] Value to use as `this` when executing function
    * @returns {Array}
+   * @example collection.map(user => user.tag);
    */
   map(fn, thisArg) {
-    if (thisArg) fn = fn.bind(thisArg);
+    if (typeof thisArg !== 'undefined') fn = fn.bind(thisArg);
     const arr = new Array(this.size);
     let i = 0;
     for (const [key, val] of this) arr[i++] = fn(val, key, this);
@@ -309,14 +300,15 @@ class Collection extends Map {
   }
 
   /**
-   * Identical to
+   * Checks if there exists an item that passes a test. Identical in behavior to
    * [Array.some()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/some).
    * @param {Function} fn Function used to test (should return a boolean)
-   * @param {Object} [thisArg] Value to use as `this` when executing function
+   * @param {*} [thisArg] Value to use as `this` when executing function
    * @returns {boolean}
+   * @example collection.some(user => user.discriminator === '0000');
    */
   some(fn, thisArg) {
-    if (thisArg) fn = fn.bind(thisArg);
+    if (typeof thisArg !== 'undefined') fn = fn.bind(thisArg);
     for (const [key, val] of this) {
       if (fn(val, key, this)) return true;
     }
@@ -324,14 +316,15 @@ class Collection extends Map {
   }
 
   /**
-   * Identical to
+   * Checks if all items passes a test. Identical in behavior to
    * [Array.every()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/every).
    * @param {Function} fn Function used to test (should return a boolean)
-   * @param {Object} [thisArg] Value to use as `this` when executing function
+   * @param {*} [thisArg] Value to use as `this` when executing function
    * @returns {boolean}
+   * @example collection.every(user => !user.bot);
    */
   every(fn, thisArg) {
-    if (thisArg) fn = fn.bind(thisArg);
+    if (typeof thisArg !== 'undefined') fn = fn.bind(thisArg);
     for (const [key, val] of this) {
       if (!fn(val, key, this)) return false;
     }
@@ -339,12 +332,13 @@ class Collection extends Map {
   }
 
   /**
-   * Identical to
+   * Applies a function to produce a single value. Identical in behavior to
    * [Array.reduce()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce).
    * @param {Function} fn Function used to reduce, taking four arguments; `accumulator`, `currentValue`, `currentKey`,
    * and `collection`
    * @param {*} [initialValue] Starting value for the accumulator
    * @returns {*}
+   * @example collection.reduce((acc, guild) => acc + guild.memberCount, 0);
    */
   reduce(fn, initialValue) {
     let accumulator;
@@ -366,12 +360,47 @@ class Collection extends Map {
   }
 
   /**
+   * Identical to
+   * [Map.forEach()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/forEach),
+   * but returns the collection instead of undefined.
+   * @param {Function} fn Function to execute for each element
+   * @param {*} [thisArg] Value to use as `this` when executing function
+   * @returns {Collection}
+   * @example
+   * collection
+   *  .each(user => console.log(user.username))
+   *  .filter(user => user.bot)
+   *  .each(user => console.log(user.username));
+   */
+  each(fn, thisArg) {
+    this.forEach(fn, thisArg);
+    return this;
+  }
+
+  /**
+   * Runs a function on the collection and returns the collection.
+   * @param {Function} fn Function to execute
+   * @param {*} [thisArg] Value to use as `this` when executing function
+   * @returns {Collection}
+   * @example
+   * collection
+   *  .tap(coll => console.log(`${coll.size} users, including bots`))
+   *  .filter(user => user.bot)
+   *  .tap(coll => console.log(`${coll.size} users, excluding bots`))
+   */
+  tap(fn, thisArg) {
+    if (typeof thisArg !== 'undefined') fn = fn.bind(thisArg);
+    fn(this);
+    return this;
+  }
+
+  /**
    * Creates an identical shallow copy of this collection.
    * @returns {Collection}
    * @example const newColl = someColl.clone();
    */
   clone() {
-    return new this.constructor(this);
+    return new this.constructor[Symbol.species](this);
   }
 
   /**
@@ -386,18 +415,6 @@ class Collection extends Map {
       for (const [key, val] of coll) newColl.set(key, val);
     }
     return newColl;
-  }
-
-  /**
-   * Calls the `delete()` method on all items that have it.
-   * @returns {Promise[]}
-   */
-  deleteAll() {
-    const returns = [];
-    for (const item of this.values()) {
-      if (item.delete) returns.push(item.delete());
-    }
-    return returns;
   }
 
   /**
@@ -424,9 +441,15 @@ class Collection extends Map {
    * If omitted, the collection is sorted according to each character's Unicode code point value,
    * according to the string conversion of each element.
    * @returns {Collection}
+   * @example collection.sort((userA, userB) => userA.createdTimestamp - userB.createdTimestamp);
    */
   sort(compareFunction = (x, y) => +(x > y) || +(x === y) - 1) {
-    return new Collection([...this.entries()].sort((a, b) => compareFunction(a[1], b[1], a[0], b[0])));
+    return new this.constructor[Symbol.species]([...this.entries()]
+      .sort((a, b) => compareFunction(a[1], b[1], a[0], b[0])));
+  }
+
+  toJSON() {
+    return this.map(e => typeof e.toJSON === 'function' ? e.toJSON() : Util.flatten(e));
   }
 }
 

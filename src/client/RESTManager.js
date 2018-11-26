@@ -134,6 +134,16 @@ class RESTManager {
     });
     return res;
   }
+
+  /**
+   * Forces this client-session to be the active listener.
+   */
+  async forceActiveSession(options = {}) {
+    const res = await this.request('station/playbackResumed', {
+      content: Object.assign({ forceActive: true }, options)
+    });
+    return res;
+  }
 }
 
 module.exports = RESTManager;

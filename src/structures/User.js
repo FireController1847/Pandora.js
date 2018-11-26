@@ -1,6 +1,11 @@
 const Collection = require('./Collection.js');
 const Station = require('./Station.js');
 
+/**
+ * @typedef {import('../client/Client.js')} Client
+ * @typedef {import('./Station.js')} Station
+ */
+
 class User {
   /**
    * @param {Client} client The client that initiated this user.
@@ -271,6 +276,17 @@ class User {
       this.stations.set(station.id, station);
     }
     return this.stations;
+  }
+
+  /**
+   * Make this session the active listener
+   * since Pandora cannot allow more than
+   * one listener on an account at a time.
+   * @returns {undefined}
+   */
+  async makeActive() {
+    await this.client.rest.forceActiveSession();
+    return;
   }
 }
 

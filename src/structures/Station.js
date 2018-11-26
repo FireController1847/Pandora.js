@@ -1,5 +1,10 @@
 const Song = require('./Song.js');
 
+/**
+ * @typedef {import('../client/Client.js')} Client
+ * @typedef {import('./Song.js')} Song
+ */
+
 class Station {
   /**
    * @param {Client} client The client that initiated this station.
@@ -187,24 +192,24 @@ class Station {
      */
     this.antiTarget = raw.antiTarget;
 
-    /**
-     * The initial seed for this station.
-     * @type {Object}
-     */
-    this.initialSeed = {
+    // /**
+    //  * The initial seed for this station.
+    //  * @type {Object}
+    //  */
+    // this.initialSeed = {
 
-      /**
-       * The music id for this seed. (?)
-       * @type {String}
-       */
-      musicId: raw.initialSeed.musicId,
+    //   /**
+    //    * The music id for this seed. (?)
+    //    * @type {String}
+    //    */
+    //   musicId: raw.initialSeed.musicId,
 
-      /**
-       * The pandora id for this seed.
-       * @type {String}
-       */
-      pandoraId: raw.initialSeed.pandoraId
-    };
+    //   /**
+    //    * The pandora id for this seed.
+    //    * @type {String}
+    //    */
+    //   pandoraId: raw.initialSeed.pandoraId
+    // };
 
     /**
      * Look, adkv is back. For all your adkv needs.

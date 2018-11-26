@@ -1,3 +1,8 @@
+/**
+ * @typedef {import('../client/Client.js')} Client
+ * @typedef {import('./Station.js')} Station
+ */
+
 class Song {
   /**
    * @param {Client} client The client that initiated this song.
