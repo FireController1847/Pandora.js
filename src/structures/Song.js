@@ -174,15 +174,15 @@ class Song {
      * @property {string} backstageAdTargeting The "backstage" ad targeting. (?)
      */
     this.adUrls = {
-      flexSkip: raw.adUrls.flexSkipAdUrl,
-      flexReplay: raw.adUrls.flexSkipAdUrl,
-      flexThumbsDown: raw.adUrls.flexThumbsDownAdUrl,
-      nowPlayingStation: raw.adUrls.nowPlayingStationAdUrl,
-      nowPlayingStationAdUnit: raw.adUrls.nowPlayingStationAdUnit,
-      nowPlayingStationAdTargeting: raw.adUrls.nowPlayingStationAdTargeting,
-      backstage: raw.adUrls.backstageAdUrl,
-      backstageAdUnit: raw.adUrls.backstageAdUnit,
-      backstageAdTargeting: raw.adUrls.backstageAdTargeting
+      flexSkip: raw.adUrls ? raw.adUrls.flexSkipAdUrl : "",
+      flexReplay: raw.adUrls ? raw.adUrls.flexSkipAdUrl : "",
+      flexThumbsDown: raw.adUrls ? raw.adUrls.flexThumbsDownAdUrl : "",
+      nowPlayingStation: raw.adUrls ? raw.adUrls.nowPlayingStationAdUrl : "",
+      nowPlayingStationAdUnit: raw.adUrls ? raw.adUrls.nowPlayingStationAdUnit : "",
+      nowPlayingStationAdTargeting: raw.adUrls ? raw.adUrls.nowPlayingStationAdTargeting : "",
+      backstage: raw.adUrls ? raw.adUrls.backstageAdUrl : "",
+      backstageAdUnit: raw.adUrls ? raw.adUrls.backstageAdUnit : "",
+      backstageAdTargeting: raw.adUrls ? raw.adUrls.backstageAdTargeting : ""
     };
 
     /**
