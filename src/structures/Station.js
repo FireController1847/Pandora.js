@@ -192,24 +192,24 @@ class Station {
      */
     this.antiTarget = raw.antiTarget;
 
-    // /**
-    //  * The initial seed for this station.
-    //  * @type {Object}
-    //  */
-    // this.initialSeed = {
+    /**
+     * The initial seed for this station.
+     * @type {Object}
+     */
+    this.initialSeed = {
 
-    //   /**
-    //    * The music id for this seed. (?)
-    //    * @type {String}
-    //    */
-    //   musicId: raw.initialSeed.musicId,
+      /**
+       * The music id for this seed. (?)
+       * @type {String}
+       */
+      musicId: raw.initialSeed ? raw.initialSeed.musicId : "",
 
-    //   /**
-    //    * The pandora id for this seed.
-    //    * @type {String}
-    //    */
-    //   pandoraId: raw.initialSeed.pandoraId
-    // };
+      /**
+       * The pandora id for this seed.
+       * @type {String}
+       */
+      pandoraId: raw.initialSeed ? raw.initialSeed.pandoraId : ""
+    };
 
     /**
      * Look, adkv is back. For all your adkv needs.
@@ -221,25 +221,25 @@ class Station {
        * The artist for this adkv.
        * @type {String}
        */
-      artist: raw.adkv.artist,
+      artist: raw.adkv ? raw.adkv.artist : "",
 
       /**
        * The genre for this adkv.
        * @type {String}
        */
-      genre: raw.adkv.genre,
+      genre: raw.adkv ? raw.adkv.genre : "",
 
       /**
        * Whether or not this adkv is clean. (?)
        * @type {string}
        */
-      clean: raw.adkv.clean,
+      clean: raw.adkv ? raw.adkv.clean : "",
 
       /**
        * Green Cats. Maybe? (?)
        * @type {String}
        */
-      gcat: raw.adkv.gcat
+      gcat: raw.adkv ? raw.adkv.gcat : ""
     };
 
 
