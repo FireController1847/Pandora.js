@@ -14,10 +14,11 @@
   },
   "devDependencies": {
     "jsdoc": "^3.5.5",
-    "minami": "^1.2.3"
+    "minami": "^1.2.3",
+    "mocha": "^5.2.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha test/test.js",
     "jsdoc:gen": "jsdoc ./src/ -r -t ./node_modules/minami",
     "jsdoc:raw": "jsdoc ./src/ -r",
     "jsdoc:prod": "jsdoc ./src/ -r -t ./node_modules/minami -d ../Pandora.js-Docs/docs"

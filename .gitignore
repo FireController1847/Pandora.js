@@ -30,5 +30,6 @@ node_modules
 docs/
 out/
 
-# Don't submit the test folder because often I test with my password and username in it.
-test/
+# Don't submit the required password file because it contains passwords and usernames.
+test/username
+test/password
