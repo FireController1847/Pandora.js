@@ -22,23 +22,23 @@ Method #1 (Preferred)
 ```js
 const { Client } = require('../node-pandora-api');
 const client = new Client();
-client.on('ready', () => {
-  console.log('Client Ready!');
-});
-client.login('myusername', 'mypassword');
-```
-
-Method #2 (Not Recommended)
-```js
-const { Client } = require('../node-pandora-api');
-const client = new Client();
 (async () => {
   await client.login('myusername', 'mypassword');
   console.log('Client Ready!');
 });
 ```
 
-Method #3 (Least Recommended)
+Method #2
+```js
+const { Client } = require('../node-pandora-api');
+const client = new Client();
+client.on('ready', () => {
+  console.log('Client Ready!');
+});
+client.login('myusername', 'mypassword');
+```
+
+Method #3
 ```js
 const { Client } = require('../node-pandora-api');
 const client = new Client();
@@ -51,17 +51,9 @@ client.login('myusername', 'mypassword').then(() => {
 All further examples should happen AFTER you're logged in.
 
 #### Getting A Station
-Method #1 (Must Be Run In An Async Function (Ex. Using Method #2 For Login))
 ```js
 const stations = await client.user.getStations();
 console.log(JSON.stringify(stations, null, 2));
-```
-
-Method #2 (Not Recommended)
-```js
-client.user.getStations().then(stations => {
-  console.log(JSON.stringify(stations, null, 2));
-});
 ```
 Simple right?
 
