@@ -1,78 +1,43 @@
-# PandoraAPI
-This is a node.js version of the unofficial Pandora API. Due to the fact that it is unofficial, I will __not__ be publishing it as a node module. On the other hand, I will build it like a node module and encourage that if you want to use it you can clone it into a folder and require it from there.
+# Pandora.js [![Build Status](https://secure.travis-ci.org/FireController1847/Pandora.js.svg)](http://travis-ci.org/FireController1847/Pandora.js) [![Dependency Status](https://david-dm.org/FireController1847/Pandora.js.svg)](https://david-dm.org/FireController1847/Pandora.js) [![codecov](https://codecov.io/gh/FireController1847/Pandora.js/branch/master/graph/badge.svg)](https://codecov.io/gh/FireController1847/Pandora.js) [![Discord](https://img.shields.io/discord/173146091640848384.svg)](https://discord.gg/0xxkiR1rO4zRsYLp)
 
-__What about docs?__ Here's a GitHub IO url for the autogen documentation. https://firecontroller1847.github.io/Pandora.js-Docs/
+Pandora.js is an interface with the Pandora Radio API. You can find the documentation for this API [here](https://firecontroller1847.github.io/Pandora.js-Docs/).
 
-__I don't like the look of your docs!__ Okay, that's fine. Checkout the instructions below to generate docs. Feel free to modify the package.json :)
-
-- Using Yarn
-  - `yarn install`
-  - `yarn run docs`
-- Using NPM
-  - `npm install`
-  - `npm run docs`
-
-Then, just open up index.html in the new folder called `out`.
-
-## Example Usage
-Here are some examples on how to use the module.
-
-#### Logging In
-Method #1 (Preferred)
+## Usage
+### Login
+You can use two main methods for logging in. You can wait for the ready event, or you can use the returned promise from the login function.
 ```js
-const { Client } = require('../node-pandora-api');
+const { Client } = require("pandora.js");
 const client = new Client();
 (async () => {
-  await client.login('myusername', 'mypassword');
-  console.log('Client Ready!');
-});
+  await client.login("username", "password");
+  console.log("Ready!");
+})();
 ```
-
-Method #2
 ```js
-const { Client } = require('../node-pandora-api');
+const { Client } = require("pandora.js");
 const client = new Client();
-client.on('ready', () => {
-  console.log('Client Ready!');
+client.on("ready", () => {
+  console.log("Ready!");
 });
-client.login('myusername', 'mypassword');
+client.login("username", "password");
 ```
 
-Method #3
-```js
-const { Client } = require('../node-pandora-api');
-const client = new Client();
-client.login('myusername', 'mypassword').then(() => {
-  console.log('Client Ready!');
-});
-```
-
-#### Important Note
-All further examples should happen AFTER you're logged in.
-
-#### Getting A Station
+### Stations
+After logging in, you can fetch a station.
 ```js
 const stations = await client.user.getStations();
-console.log(JSON.stringify(stations, null, 2));
+console.log(stations.first().name);
 ```
-Simple right?
 
-#### Getting Some Random Songs
-Because, it's Pandora. This is what the app does.
-
+### Getting Some Songs
+After you've got a station, you can then get some songs.
+Pandora gives you 5 songs on request when using this function.
 ```js
-// Assuming you now have the stations variable from above.
-const station = stations.first(); // Get the first station, unless you want to sift through them and find the one you want.
-const songs = await station.getSongList(true); // This is the first time we're getting the song list, so we need to specify that using `true`.
-console.log(JSON.stringify(songs, null, 2));
+const songs = await station.getSongList(true);
+songs.forEach(song => {
+  console.log("Song Name: " + song.title);
+});
 ```
 
-Congradulations, you've successfully gotten some songs! Now, just make a `get` request to one of the song's audioURL's, and you're on your way!
-
-## ⚠ This Module Is Not Complete
-All Pandora methods may not be completed. I've taken the time and effort to reverse engineer the Pandora API (with some help of [this doc sheet](https://6xq.net/pandora-apidoc/rest/), although not much), but since Pandora doesn't ensorse the usage of this API, they may change things at will without notice. Versions of this module will break randomly, and patches may or may not be fixed. **All pull requests to help add more methods or items to the API are appreciated.**
-
-## ⚠ There are 'with good intent' conditions you should follow!
-Pandora does not endorse the usage of this API, and it may even get your account banned. If you use this API to pirate songs or play songs without playing the additional ads for them, **you are doing so at your own risk**. This API is merely to provide a way to use Pandora in Node.js. What you do with it is on you. If Pandora Media comes after you, sues you, or anything similar because your app is breaking the terms of service (or anything similar), you CANNOT blame this API.
-
-**You must ALWAYS play ads on a non-premium user account!**
+## ⚠ Usage Conditions
+This API is fan-made, and since the Pandora API is technically private we have to literally discover the different methods that you can use. This means that there is not a full understanding of how the API works, how it will change, or if it will even continue to work. Pandora does NOT ensorse the usage of this API at any point and IS against their Terms of Service. Please keep this in mind before you continue using this module. **You use this module at your own risk**, meaning if Pandora comes after you for breaking their Terms of Service, you cannot blame this API. To reduce any risk, **always play ads on a non-premium user account.**
