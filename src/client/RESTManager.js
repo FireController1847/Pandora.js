@@ -1,10 +1,10 @@
-const cookie = require('cookie');
-const query = require('querystring');
-const snekfetch = require('snekfetch');
+const cookie = require("cookie");
+const query = require("querystring");
+const snekfetch = require("snekfetch");
 
 /**
  * Handles all REST requests related to the API.
- * 
+ *
  * @typedef {import('./Client.js')} Client
  */
 class RESTManager {
@@ -24,7 +24,7 @@ class RESTManager {
      * The Pandora Website URL
      * @type {String}
      */
-    this.url = 'https://www.pandora.com/';
+    this.url = "https://www.pandora.com/";
 
     /**
      * The user object gotten after login.
@@ -49,17 +49,17 @@ class RESTManager {
    */
   async request(endpoint, options = {}) {
     if (options.query) options.query = query.stringify(options.query);
-    options.url = `${this.url}api/${options.version || 'v1'}/${endpoint}${options.query ? `?${options.query}` : ''}`;
+    options.url = `${this.url}api/${options.version || "v1"}/${endpoint}${options.query ? `?${options.query}` : ""}`;
     this.client.debug(options.url);
-    let req = snekfetch[options.method || 'post'](options.url)
-      .set('X-CsrfToken', this.cookies.csrftoken)
-      .set('Content-Type', 'application/json');
-    if (this.client.user && options.user != false) req = req.set('X-AuthToken', this.client.user.token);
-    if (options.cookies != false) req = req.set('Cookie', this.getCookieString());
+    let req = snekfetch[options.method || "post"](options.url)
+      .set("X-CsrfToken", this.cookies.csrftoken)
+      .set("Content-Type", "application/json");
+    if (this.client.user && options.user != false) req = req.set("X-AuthToken", this.client.user.token);
+    if (options.cookies != false) req = req.set("Cookie", this.getCookieString());
     if (options.headers) req = req.set(options.headers);
     if (options.content) req = req.send(options.content);
     const res = await req;
-    if (res.headers['set-cookie']) this.setCookies(res.headers['set-cookie']);
+    if (res.headers["set-cookie"]) this.setCookies(res.headers["set-cookie"]);
     if (options.raw) return res;
     else return JSON.parse(res.text);
   }
@@ -75,7 +75,7 @@ class RESTManager {
     Object.keys(this.cookies).forEach(key => {
       arr.push(cookie.serialize(key, this.cookies[key]));
     });
-    return arr.join(';');
+    return arr.join(";");
   }
 
   /**
@@ -95,7 +95,7 @@ class RESTManager {
   /** Methods */
   async getCSRFToken() {
     const res = await snekfetch.head(this.url);
-    this.setCookies(res.headers['set-cookie'] || []);
+    this.setCookies(res.headers["set-cookie"] || []);
     return res;
   }
 
@@ -106,7 +106,7 @@ class RESTManager {
    * @returns {Promise<Object>}
    */
   async authLogin(username, password) {
-    const res = await this.request('auth/login', {
+    const res = await this.request("auth/login", {
       content: { username, password }
     });
     return res;
@@ -118,7 +118,7 @@ class RESTManager {
    * @param {number} options.pageSize How big each page is.
    */
   async getStations(options = {}) {
-    const res = await this.request('station/getStations', {
+    const res = await this.request("station/getStations", {
       content: options
     });
     return res;
@@ -134,7 +134,7 @@ class RESTManager {
    * @returns {Promise<Object>}
    */
   async playlistGetFragment(stationId, isStationStart, options = {}) {
-    const res = await this.request('playlist/getFragment', {
+    const res = await this.request("playlist/getFragment", {
       content: Object.assign({ stationId, isStationStart }, options)
     });
     return res;
@@ -144,7 +144,7 @@ class RESTManager {
    * Forces this client-session to be the active listener.
    */
   async forceActiveSession(options = {}) {
-    const res = await this.request('station/playbackResumed', {
+    const res = await this.request("station/playbackResumed", {
       content: Object.assign({ forceActive: true }, options)
     });
     return res;

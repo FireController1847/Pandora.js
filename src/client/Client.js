@@ -1,6 +1,6 @@
-const { EventEmitter } = require('events');
-const RESTManager = require('./RESTManager.js');
-const User = require('../structures/User.js');
+const { EventEmitter } = require("events");
+const RESTManager = require("./RESTManager.js");
+const User = require("../structures/User.js");
 
 /**
  * @typedef {import('./RESTManager.js')} RESTManager
@@ -54,7 +54,7 @@ class Client extends EventEmitter {
      * in to the Pandora API.
      * @event Client#ready
      */
-    this.emit('ready');
+    this.emit("ready");
   }
 
   /** @ignore Utility Methods */

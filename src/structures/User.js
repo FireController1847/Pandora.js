@@ -1,9 +1,9 @@
-const Collection = require('./Collection.js');
-const Station = require('./Station.js');
+const Collection = require("./Collection.js");
+const Station = require("./Station.js");
 
 /**
  * Represents the user that is logged in.
- * 
+ *
  * @typedef {import('../client/Client.js')} Client
  * @typedef {import('./Station.js')} Station
  */
@@ -255,7 +255,6 @@ class User {
    */
   async makeActive() {
     await this.client.rest.forceActiveSession();
-    return;
   }
 }
 

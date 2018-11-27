@@ -1,6 +1,6 @@
 /**
  * Represents a Pandora Song.
- * 
+ *
  * @typedef {import('../client/Client.js')} Client
  * @typedef {import('../client/Client.js').Art} Art
  * @typedef {import('./Station.js')} Station

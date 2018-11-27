@@ -1,8 +1,8 @@
-const Song = require('./Song.js');
+const Song = require("./Song.js");
 
 /**
  * Represents a Pandora Station.
- * 
+ *
  * @typedef {import('../client/Client.js')} Client
  * @typedef {import('../client/Client.js').Art} Art
  * @typedef {import('./Song.js')} Song
@@ -24,7 +24,7 @@ class Station {
      * @type {string}
      */
     this.id = raw.stationId;
-    
+
     /**
      * This station's name.
      * @type {string}

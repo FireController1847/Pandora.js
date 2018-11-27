@@ -7,7 +7,7 @@ const fs = require("fs");
 describe("Attempt a login and ensure it's successful", async function() {
 
   it("Run a login attempt", async function() {
-    await client.login(fs.readFileSync("./username").toString(), fs.readFileSync("./password").toString());
+    await client.login(process.env.PANDORA_USERNAME || fs.readFileSync("./username").toString(), process.env.PANDORA_PASSWORD || fs.readFileSync("./password").toString());
   }).timeout(10000);
 
   it("Check for tokens", async function() {

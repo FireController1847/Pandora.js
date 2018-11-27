@@ -1,6 +1,6 @@
 {
   "name": "pandora.js",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A Node.js Port of the Unofficial Pandora Radio API",
   "main": "./src/index.js",
   "directories": {
@@ -8,18 +8,21 @@
     "test": "test"
   },
   "dependencies": {
-    "blowfish": "^1.0.1",
     "cookie": "^0.3.1",
     "snekfetch": "^3.6.4"
   },
   "devDependencies": {
     "documentation": "^8.1.2",
-    "mocha": "^5.2.0"
+    "eslint": "^5.9.0",
+    "mocha": "^5.2.0",
+    "npm-run-all": "^4.1.5"
   },
   "scripts": {
-    "test": "mocha test/test.js",
+    "test": "run-s lint && mocha test/test.js",
     "docs": "documentation build src/** -f html -o out",
-    "docs:json": "documentation build src/** -f json -o out/docs.json"
+    "docs:json": "documentation build src/** -f json -o out/docs.json",
+    "lint": "eslint src/**",
+    "lint:fix": "eslint src/** --fix"
   },
   "repository": {
     "type": "git",

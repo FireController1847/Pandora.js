@@ -1,7 +1,9 @@
+const isObject = d => typeof d === "object" && d !== null;
+
 /**
  * A modified version of Discord.js's Collection.js. Thanks guys!
  * https://github.com/discordjs/discord.js/blob/master/src/util/Collection.js
- * 
+ *
  * A Map with additional utility methods. This is used throughout discord.js rather than Arrays for anything that has
  * an ID, for significantly improved performance and ease-of-use.
  * @extends {Map}
@@ -17,7 +19,7 @@ class Collection extends Map {
      * @type {?Array}
      * @private
      */
-    Object.defineProperty(this, '_array', { value: null, writable: true, configurable: true });
+    Object.defineProperty(this, "_array", { value: null, writable: true, configurable: true });
 
     /**
      * Cached array for the `keyArray()` method - will be reset to `null` whenever `set()` or `delete()` are called
@@ -25,7 +27,7 @@ class Collection extends Map {
      * @type {?Array}
      * @private
      */
-    Object.defineProperty(this, '_keyArray', { value: null, writable: true, configurable: true });
+    Object.defineProperty(this, "_keyArray", { value: null, writable: true, configurable: true });
   }
 
   /**
@@ -35,32 +37,33 @@ class Collection extends Map {
    * @returns {Object}
   */
   static flatten(obj, ...props) {
-  if (!isObject(obj)) return obj;
+    if (!isObject(obj)) return obj;
 
-  props = Object.assign(...Object.keys(obj).filter(k => !k.startsWith('_')).map(k => ({ [k]: true })), ...props);
+    props = Object.assign(...Object.keys(obj).filter(k => !k.startsWith("_")).map(k => ({ [k]: true })), ...props);
 
-  const out = {};
+    const out = {};
 
-  for (let [prop, newProp] of Object.entries(props)) {
-    if (!newProp) continue;
-    newProp = newProp === true ? prop : newProp;
+    // eslint-disable-next-line
+    for (let [prop, newProp] of Object.entries(props)) {
+      if (!newProp) continue;
+      newProp = newProp === true ? prop : newProp;
 
-    const element = obj[prop];
-    const elemIsObj = isObject(element);
-    const valueOf = elemIsObj && typeof element.valueOf === 'function' ? element.valueOf() : null;
+      const element = obj[prop];
+      const elemIsObj = isObject(element);
+      const valueOf = elemIsObj && typeof element.valueOf === "function" ? element.valueOf() : null;
 
-    // If it's a collection, make the array of keys
-    if (element instanceof require('./Collection')) out[newProp] = Array.from(element.keys());
-    // If it's an array, flatten each element
-    else if (Array.isArray(element)) out[newProp] = element.map(e => Collection.flatten(e));
-    // If it's an object with a primitive `valueOf`, use that value
-    else if (typeof valueOf !== 'object') out[newProp] = valueOf;
-    // If it's a primitive
-    else if (!elemIsObj) out[newProp] = element;
+      // If it's a collection, make the array of keys
+      if (element instanceof require("./Collection")) out[newProp] = Array.from(element.keys());
+      // If it's an array, flatten each element
+      else if (Array.isArray(element)) out[newProp] = element.map(e => Collection.flatten(e));
+      // If it's an object with a primitive `valueOf`, use that value
+      else if (typeof valueOf !== "object") out[newProp] = valueOf;
+      // If it's a primitive
+      else if (!elemIsObj) out[newProp] = element;
+    }
+
+    return out;
   }
-
- return out;
-}
 
   set(key, val) {
     this._array = null;
@@ -105,7 +108,7 @@ class Collection extends Map {
    * amount is negative
    */
   first(amount) {
-    if (typeof amount === 'undefined') return this.values().next().value;
+    if (typeof amount === "undefined") return this.values().next().value;
     if (amount < 0) return this.last(amount * -1);
     amount = Math.min(this.size, amount);
     const arr = new Array(amount);
@@ -121,7 +124,7 @@ class Collection extends Map {
    * amount is negative
    */
   firstKey(amount) {
-    if (typeof amount === 'undefined') return this.keys().next().value;
+    if (typeof amount === "undefined") return this.keys().next().value;
     if (amount < 0) return this.lastKey(amount * -1);
     amount = Math.min(this.size, amount);
     const arr = new Array(amount);
@@ -139,7 +142,7 @@ class Collection extends Map {
    */
   last(amount) {
     const arr = this.array();
-    if (typeof amount === 'undefined') return arr[arr.length - 1];
+    if (typeof amount === "undefined") return arr[arr.length - 1];
     if (amount < 0) return this.first(amount * -1);
     if (!amount) return [];
     return arr.slice(-amount);
@@ -154,7 +157,7 @@ class Collection extends Map {
    */
   lastKey(amount) {
     const arr = this.keyArray();
-    if (typeof amount === 'undefined') return arr[arr.length - 1];
+    if (typeof amount === "undefined") return arr[arr.length - 1];
     if (amount < 0) return this.firstKey(amount * -1);
     if (!amount) return [];
     return arr.slice(-amount);
@@ -168,7 +171,7 @@ class Collection extends Map {
    */
   random(amount) {
     let arr = this.array();
-    if (typeof amount === 'undefined') return arr[Math.floor(Math.random() * arr.length)];
+    if (typeof amount === "undefined") return arr[Math.floor(Math.random() * arr.length)];
     if (arr.length === 0 || !amount) return [];
     const rand = new Array(amount);
     arr = arr.slice();
@@ -184,7 +187,7 @@ class Collection extends Map {
    */
   randomKey(amount) {
     let arr = this.keyArray();
-    if (typeof amount === 'undefined') return arr[Math.floor(Math.random() * arr.length)];
+    if (typeof amount === "undefined") return arr[Math.floor(Math.random() * arr.length)];
     if (arr.length === 0 || !amount) return [];
     const rand = new Array(amount);
     arr = arr.slice();
@@ -204,7 +207,7 @@ class Collection extends Map {
    * @example collection.find(user => user.username === 'Bob');
    */
   find(fn, thisArg) {
-    if (typeof thisArg !== 'undefined') fn = fn.bind(thisArg);
+    if (typeof thisArg !== "undefined") fn = fn.bind(thisArg);
     for (const [key, val] of this) {
       if (fn(val, key, this)) return val;
     }
@@ -223,7 +226,7 @@ class Collection extends Map {
    */
   findKey(fn, thisArg) {
     /* eslint-enable max-len */
-    if (typeof thisArg !== 'undefined') fn = fn.bind(thisArg);
+    if (typeof thisArg !== "undefined") fn = fn.bind(thisArg);
     for (const [key, val] of this) {
       if (fn(val, key, this)) return key;
     }
@@ -237,7 +240,7 @@ class Collection extends Map {
    * @returns {number} The number of removed entries
    */
   sweep(fn, thisArg) {
-    if (typeof thisArg !== 'undefined') fn = fn.bind(thisArg);
+    if (typeof thisArg !== "undefined") fn = fn.bind(thisArg);
     const previousSize = this.size;
     for (const [key, val] of this) {
       if (fn(val, key, this)) this.delete(key);
@@ -255,7 +258,7 @@ class Collection extends Map {
    * @example collection.filter(user => user.username === 'Bob');
    */
   filter(fn, thisArg) {
-    if (typeof thisArg !== 'undefined') fn = fn.bind(thisArg);
+    if (typeof thisArg !== "undefined") fn = fn.bind(thisArg);
     const results = new this.constructor[Symbol.species]();
     for (const [key, val] of this) {
       if (fn(val, key, this)) results.set(key, val);
@@ -272,7 +275,7 @@ class Collection extends Map {
    * @example const [big, small] = collection.partition(guild => guild.memberCount > 250);
    */
   partition(fn, thisArg) {
-    if (typeof thisArg !== 'undefined') fn = fn.bind(thisArg);
+    if (typeof thisArg !== "undefined") fn = fn.bind(thisArg);
     const results = [new this.constructor[Symbol.species](), new this.constructor[Symbol.species]()];
     for (const [key, val] of this) {
       if (fn(val, key, this)) {
@@ -293,7 +296,7 @@ class Collection extends Map {
    * @example collection.map(user => user.tag);
    */
   map(fn, thisArg) {
-    if (typeof thisArg !== 'undefined') fn = fn.bind(thisArg);
+    if (typeof thisArg !== "undefined") fn = fn.bind(thisArg);
     const arr = new Array(this.size);
     let i = 0;
     for (const [key, val] of this) arr[i++] = fn(val, key, this);
@@ -309,7 +312,7 @@ class Collection extends Map {
    * @example collection.some(user => user.discriminator === '0000');
    */
   some(fn, thisArg) {
-    if (typeof thisArg !== 'undefined') fn = fn.bind(thisArg);
+    if (typeof thisArg !== "undefined") fn = fn.bind(thisArg);
     for (const [key, val] of this) {
       if (fn(val, key, this)) return true;
     }
@@ -325,7 +328,7 @@ class Collection extends Map {
    * @example collection.every(user => !user.bot);
    */
   every(fn, thisArg) {
-    if (typeof thisArg !== 'undefined') fn = fn.bind(thisArg);
+    if (typeof thisArg !== "undefined") fn = fn.bind(thisArg);
     for (const [key, val] of this) {
       if (!fn(val, key, this)) return false;
     }
@@ -343,7 +346,7 @@ class Collection extends Map {
    */
   reduce(fn, initialValue) {
     let accumulator;
-    if (typeof initialValue !== 'undefined') {
+    if (typeof initialValue !== "undefined") {
       accumulator = initialValue;
       for (const [key, val] of this) accumulator = fn(accumulator, val, key, this);
     } else {
@@ -390,7 +393,7 @@ class Collection extends Map {
    *  .tap(coll => console.log(`${coll.size} users, excluding bots`))
    */
   tap(fn, thisArg) {
-    if (typeof thisArg !== 'undefined') fn = fn.bind(thisArg);
+    if (typeof thisArg !== "undefined") fn = fn.bind(thisArg);
     fn(this);
     return this;
   }
@@ -450,7 +453,7 @@ class Collection extends Map {
   }
 
   toJSON() {
-    return this.map(e => typeof e.toJSON === 'function' ? e.toJSON() : Collection.flatten(e));
+    return this.map(e => typeof e.toJSON === "function" ? e.toJSON() : Collection.flatten(e));
   }
 }
 
