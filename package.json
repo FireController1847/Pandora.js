@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "cookie": "^0.3.1",
-    "snekfetch": "^3.6.4"
+    "snekfetch": "^4.0.4"
   },
   "devDependencies": {
     "documentation": "^8.1.2",

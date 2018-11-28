@@ -61,7 +61,7 @@ class RESTManager {
     const res = await req;
     if (res.headers["set-cookie"]) this.setCookies(res.headers["set-cookie"]);
     if (options.raw) return res;
-    else return JSON.parse(res.text);
+    else return res.body;
   }
 
   /** Cookies */
