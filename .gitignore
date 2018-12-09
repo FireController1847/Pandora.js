@@ -33,3 +33,6 @@ out/
 # Don't submit the required password file because it contains passwords and usernames.
 test/username
 test/password
+
+# Whee.js is used for testing purposes such as debugging while in development.
+test/whee.js
