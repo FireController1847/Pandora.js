@@ -1,10 +1,12 @@
 const { EventEmitter } = require("events");
 const RESTManager = require("./RESTManager.js");
 const User = require("../structures/User.js");
+const SearchAnnotation = require("../structures/SearchAnnotation.js");
 
 /**
  * @typedef {import('./RESTManager.js')} RESTManager
  * @typedef {import('../structures/User.js')} User
+ * @typedef {import('../structures/SearchAnnotation')} SearchAnnotation
  * @ignore
  */
 
@@ -57,6 +59,37 @@ class Client extends EventEmitter {
     this.emit("ready");
   }
 
+  // /**
+  //  * Searches the entire Pandora API.
+  //  * @param {string} query The string you want to search for.
+  //  * @param {SearchType} [type="ALL"] The type of things you want to search for.
+  //  * @param {number} [count=20] The amount of results you'd like to recieve.
+  //  * @returns {Promise<Array<SearchAnnotation>>}
+  //  */
+  // async search(query, type = "ALL", count = 20) {
+  //   if (!query) throw new Error("No Search Query");
+  //   const typearr = Client.SearchTypes[type];
+  //   if (!typearr) throw new TypeError("Invalid Search Type");
+  //   if (count <= 0) throw new RangeError("Count Must Be Greater Than Zero");
+
+  //   const list = await this.rest.sodSearch(query, count, typearr);
+  //   const sa = [];
+  //   for (let i = 0; i < list.results.length; i++) {
+  //     sa.push(list.annotations[list.results[i]]);
+  //   }
+  //   return sa;
+  // }
+
+  // {query: "rocket league", types: ["AL", "AR", "CO", "TR", "SF", "PL", "ST"], listener: null, start: 0,…}
+  // annotate: true
+  // count: 20
+  // filters: []
+  // listener: null
+  // query: "rocket league"
+  // searchTime: 30069.5999999989
+  // start: 0
+  // types: ["AL", "AR", "CO", "TR", "SF", "PL", "ST"]
+
   /** @ignore Utility Methods */
 
   /**
@@ -75,5 +108,28 @@ class Client extends EventEmitter {
  * @property {String} url The URL for this art.
  * @property {number} size The size in pixels of this art.
  */
+
+/**
+ * The different search types:
+ *
+ * * ALL
+ * * ARTISTS
+ * * ALBUMS
+ * * SONGS
+ * * STATIONS
+ * * PLAYLISTS
+ *
+ * @typedef {string} SearchType
+ */
+Client.SearchTypes = {
+  ALL: ["AL", "AR", "CO", "TR", "SF", "PL", "ST"],
+  // What is CO??
+  ARTISTS: ["AR", "CO"],
+  ALBUMS: ["AL"],
+  SONGS: ["TR"],
+  // Can anyone explain the reasoning behind the included colons here?
+  STATIONS: ["SF:AR", "SF:CO", "SF:TR", "SF:GE", "SF:HS", "SF:TT", "ST"],
+  PLAYLISTS: ["PL"]
+};
 
 module.exports = Client;

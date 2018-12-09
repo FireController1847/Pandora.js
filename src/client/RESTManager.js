@@ -1,5 +1,5 @@
 const cookie = require("cookie");
-const query = require("querystring");
+const querystring = require("querystring");
 const snekfetch = require("snekfetch");
 
 /**
@@ -37,7 +37,7 @@ class RESTManager {
   /**
    * Requests the API.
    * @param {string} endpoint The endpoint you want to request for.
-   * @param {Object} options The Request options.
+   * @param {Object} options The request options.
    * @param {string} [options.method='post'] The method you want the request to use.
    * @param {Object} options.query An object indicating the different queries.
    * @param {Object} options.headers An objects containing the headers you want to include.
@@ -48,7 +48,7 @@ class RESTManager {
    * @returns {Promise<Object>} The request response in JSON unless raw was defined.
    */
   async request(endpoint, options = {}) {
-    if (options.query) options.query = query.stringify(options.query);
+    if (options.query) options.query = querystring.stringify(options.query);
     options.url = `${this.url}api/${options.version || "v1"}/${endpoint}${options.query ? `?${options.query}` : ""}`;
     this.client.debug(options.url);
     let req = snekfetch[options.method || "post"](options.url)
@@ -117,7 +117,7 @@ class RESTManager {
    * @param {Object} options
    * @param {number} options.pageSize How big each page is.
    */
-  async getStations(options = {}) {
+  async stationGetStations(options = {}) {
     const res = await this.request("station/getStations", {
       content: options
     });
@@ -136,6 +136,22 @@ class RESTManager {
   async playlistGetFragment(stationId, isStationStart, options = {}) {
     const res = await this.request("playlist/getFragment", {
       content: Object.assign({ stationId, isStationStart }, options)
+    });
+    return res;
+  }
+
+  /**
+   * Calls the search endpoint.
+   * @param {string} query The search query.
+   * @param {number} count The amount of results to recieve.
+   * @param {Array<String>} types The different types of things to search for.
+   * @param {Object} options
+   * @returns {Promise<Object>}
+   */
+  async sodSearch(query, count, types, options = {}) {
+    const res = await this.request("sod/search", {
+      content: Object.assign({ query, count, types }, options),
+      version: "v3"
     });
     return res;
   }

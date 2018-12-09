@@ -239,7 +239,7 @@ class User {
    */
   async getStations() {
     this.stations.clear();
-    const list = await this.client.rest.getStations();
+    const list = await this.client.rest.stationGetStations();
     for (let i = 0; i < list.stations.length; i++) {
       const station = new Station(this.client, list.stations[i]);
       this.stations.set(station.id, station);
