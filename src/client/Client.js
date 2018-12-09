@@ -1,7 +1,7 @@
 const { EventEmitter } = require("events");
 const RESTManager = require("./RESTManager.js");
 const User = require("../structures/User.js");
-const SearchAnnotation = require("../structures/SearchAnnotation.js");
+// const SearchAnnotation = require("../structures/SearchAnnotation.js");
 
 /**
  * @typedef {import('./RESTManager.js')} RESTManager
