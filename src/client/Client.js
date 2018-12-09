@@ -115,7 +115,7 @@ class Client extends EventEmitter {
  * * ALL
  * * ARTISTS
  * * ALBUMS
- * * SONGS
+ * * TRACKS
  * * STATIONS
  * * PLAYLISTS
  *
@@ -126,7 +126,7 @@ Client.SearchTypes = {
   // What is CO??
   ARTISTS: ["AR", "CO"],
   ALBUMS: ["AL"],
-  SONGS: ["TR"],
+  TRACKS: ["TR"],
   // Can anyone explain the reasoning behind the included colons here?
   STATIONS: ["SF:AR", "SF:CO", "SF:TR", "SF:GE", "SF:HS", "SF:TT", "ST"],
   PLAYLISTS: ["PL"]

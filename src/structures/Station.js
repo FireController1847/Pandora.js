@@ -1,11 +1,11 @@
-const Song = require("./Song.js");
+const Track = require("./Track.js");
 
 /**
  * Represents a Pandora Station.
  *
  * @typedef {import('../client/Client.js')} Client
  * @typedef {import('../client/Client.js').Art} Art
- * @typedef {import('./Song.js')} Song
+ * @typedef {import('./Track.js')} Track
  */
 class Station {
   /**
@@ -231,19 +231,19 @@ class Station {
   }
 
   /**
-   * Returns a list of songs to play.
-   * @param {boolean} isStationStart Whether or not this is the first time requested for songs from this station.
+   * Returns a list of tracks to play.
+   * @param {boolean} isStationStart Whether or not this is the first time requested for tracks from this station.
    * @param {Object} options
    * @param {string} options.audioFormat The audioURL return format.
-   * @returns {Promise<Array<Song>>}
+   * @returns {Promise<Array<Track>>}
    */
-  async getSongList(isStationStart, options = {}) {
+  async getRandomTracks(isStationStart, options = {}) {
     const list = await this.client.rest.playlistGetFragment(this.id, isStationStart, options);
-    const rSongs = [];
+    const rTracks = [];
     for (let i = 0; i < list.tracks.length; i++) {
-      rSongs.push(new Song(this.client, this, list.tracks[i]));
+      rTracks.push(new Track(this.client, this, list.tracks[i]));
     }
-    return rSongs;
+    return rTracks;
   }
 }
 
