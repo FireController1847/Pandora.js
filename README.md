@@ -1,3 +1,6 @@
+### PANDORA.JS IS NO LONGER SUPPORTED
+If you would like to continue the project, feel free to give it a fork and let me know!
+
 # Pandora.js [![Build Status](https://secure.travis-ci.org/FireController1847/Pandora.js.svg)](http://travis-ci.org/FireController1847/Pandora.js) [![Dependency Status](https://david-dm.org/FireController1847/Pandora.js.svg)](https://david-dm.org/FireController1847/Pandora.js) [![codecov](https://codecov.io/gh/FireController1847/Pandora.js/branch/master/graph/badge.svg)](https://codecov.io/gh/FireController1847/Pandora.js) [![Discord](https://img.shields.io/discord/173146091640848384.svg)](https://discord.gg/0xxkiR1rO4zRsYLp)
 
 Pandora.js is an interface with the Pandora Radio API. You can find the documentation for this API [here](https://firecontroller1847.github.io/Pandora.js-Docs/).
